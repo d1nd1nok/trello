@@ -1,45 +1,49 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import BoardCard from '../components/BoardCard';
 
 function Home() {
   const [boards, setBoards] = useState([]);
   const [newBoardName, setNewBoardName] = useState('');
-  const location = useLocation(); 
 
   useEffect(() => {
-    const storedBoards = JSON.parse(localStorage.getItem('boards')) || [];
-    setBoards(storedBoards);
-  }, [location]); 
+    axios.get('http://localhost:5000/boards')
+      .then(response => setBoards(response.data))
+      .catch(error => console.error("Error fetching boards:", error));
+  }, []);
 
   const addBoard = () => {
     if (newBoardName.trim()) {
-      const newBoards = [...boards, { id: Date.now(), name: newBoardName }];
-      setBoards(newBoards);
-      localStorage.setItem('boards', JSON.stringify(newBoards));
-      setNewBoardName('');
+      const newBoard = { name: newBoardName };
+
+      axios.post('http://localhost:5000/boards', newBoard)
+        .then(response => {
+          setBoards([...boards, response.data]);
+          setNewBoardName('');
+        })
+        .catch(error => console.error("Error adding board:", error));
     }
   };
 
   const deleteBoard = (id) => {
-    const updatedBoards = boards.filter((board) => board.id !== id);
-    setBoards(updatedBoards);
-    localStorage.setItem('boards', JSON.stringify(updatedBoards));
+    axios.delete(`http://localhost:5000/boards/${id}`)
+      .then(() => setBoards(boards.filter(board => board.id !== id)))
+      .catch(error => console.error("Error deleting board:", error));
   };
 
   return (
     <div className="Home-main">
-      <h1 >Мои доски</h1>
+      <h1>My boards</h1>
       <div className="board-add-container">
         <input
           type="text"
           className="input"
-          placeholder="Название доски"
+          placeholder="Board name"
           value={newBoardName}
           onChange={(e) => setNewBoardName(e.target.value)}
         />
         <button className="btn" onClick={addBoard}>
-          Добавить
+          Add
         </button>
       </div>
       <div className="board-grid">

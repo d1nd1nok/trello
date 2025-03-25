@@ -1,0 +1,15 @@
+{
+    "boards": [
+      { "id": 1, "name": "Board 1" },
+      { "id": 2, "name": "Board 2" }
+    ],
+    "columns": [
+      { "id": 1, "boardId": 1, "name": "Column 1" },
+      { "id": 2, "boardId": 1, "name": "Column 2" }
+    ],
+    "cards": [
+      { "id": 1, "columnId": 1, "title": "Task 1", "description": "Do something" },
+      { "id": 2, "columnId": 2, "title": "Task 2", "description": "Continue progress" }
+    ]
+  }
+  

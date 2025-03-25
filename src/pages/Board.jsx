@@ -6,7 +6,7 @@ function Board() {
   return (
         
     <div className="board-name">
-         Доска ID: {id}
+         Board id: {id}
     </div>
     );
 }
